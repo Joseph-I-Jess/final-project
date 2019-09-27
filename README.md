@@ -16,3 +16,5 @@ Create a program that designs, uses, and demonstrates understanding of the follo
 8. GUI components and event driven programming,
 9. exceptions,
 10. Inheritance.
+
+<strong>Create a document that shows both an image of your program demonstrating the above topic and an image of some source code that makes that example work.<strong>
