@@ -14,6 +14,13 @@ class GUI():
     def __init__(self):
         self.board = Board()
 
+        for i in range(3):
+            for j in range(3):
+                self.board.board[i][j] = '.'
+                print(self.board.board[i][j], end = " ")
+            print("")
+        print("")
+
         self.master = Tk()
         self.master.geometry('400x600')
         self.master.title("GUI")
@@ -35,12 +42,15 @@ class GUI():
         self.label_up = Label(self.frame_up, text="Tic Tac Toe", font=("Courier", 25))
         self.label_up.pack()
 
+        self.label_down = Label(self.frame_down, text="Player 1 Turn!", font=("Courier", 25))
+        self.label_down.pack()
+
         self.canvas = Canvas(self.frame_board, width=400, height=400, bg='white')
         self.canvas.pack(expand=YES, fill=BOTH)
         
         self.canvas.create_image(3, 3, image=self.board_image, anchor=NW)
 
-        self.rect1 = self.canvas.create_rectangle(3, 3, 125, 130, fill='lightgrey', outline='white', tags="square1")
+        self.rect1 = self.canvas.create_rectangle(3, 3, 125, 130, fill='white', outline='white', tags="square1")
         self.rect2 = self.canvas.create_rectangle(155, 3, 250, 130, fill='white', outline='white', tags="square2")
         self.rect3 = self.canvas.create_rectangle(280, 3, 400, 130, fill='white', outline='white', tags="square3")
         self.rect4 = self.canvas.create_rectangle(3, 160, 125, 255, fill='white', outline='white', tags="square4")
@@ -73,100 +83,74 @@ class GUI():
         }
 
         self.symbol = "X"
+
+        self.turn = 0
     
     def hi(self, event, square):
         if self.symbol == "X":
             self.canvas.create_image(self.dict[square][0], self.dict[square][1], image=self.X_image, anchor=NW)
+            self.board.board[self.dict[square][2]][self.dict[square][3]] = self.symbol
+            self.checkConditions()
             self.symbol = "O"
+            self.label_down.configure(text="Player 2 Turn!")
+            self.label_down.update()
         elif self.symbol == "O":
             self.canvas.create_image(self.dict[square][0], self.dict[square][1], image=self.O_image, anchor=NW)
+            self.board.board[self.dict[square][2]][self.dict[square][3]] = self.symbol
+            self.checkConditions()
             self.symbol = "X"
+            self.label_down.configure(text="Player 1 Turn!")
+            self.label_down.update()
+        self.turn += 1
 
-    def setupBoard(self):
-        board = Board()
+        self.printBoard()
+        print(self.board.board)
+
+        if(self.board.done != False or self.turn >= 9):
+            print(self.board.X, self.board.O)
+            if(self.board.X == True):
+                print("Player 1 Wins!\n")
+            elif(self.board.O == True):
+                print("Player 2 Wins!\n")
+            else:
+                print("It's a TIE!")
+            
+            self.quit()
+
+    def printBoard(self):
         for i in range(3):
             for j in range(3):
-                board.board[i][j] = '.'
-                print(board.board[i][j], end = " ")
-            print("")
-        print("")
-        return board
-
-    def printBoard(self, board):
-        for i in range(3):
-            for j in range(3):
-                print(board.board[i][j], end = " ")
+                print(self.board.board[i][j], end = " ")
             print("")
         print("")
 
-    def checkConditions(self, board):
+    def checkConditions(self):
         for i in range(3):
-            if(board.board[i][0] == 'O' and board.board[i][1] == 'O' and board.board[i][2] == 'O'):
-                board.done = True
-                board.O = True
-            if(board.board[i][0] == 'X' and board.board[i][0] == 'X' and board.board[i][2] == 'X'):
-                board.done = True
-                board.X = True
+            if(self.board.board[i][0] == 'O' and self.board.board[i][1] == 'O' and self.board.board[i][2] == 'O'):
+                self.board.done = True
+                self.board.O = True
+            if(self.board.board[i][0] == 'X' and self.board.board[i][1] == 'X' and self.board.board[i][2] == 'X'):
+                self.board.done = True
+                self.board.X = True
         for j in range(3):
-            if(board.board[0][j] == 'O' and board.board[1][j] == 'O' and board.board[2][j] == 'O'):
-                board.done = True
-                board.O = True
-            if(board.board[0][j] == 'X' and board.board[1][j] == 'X' and board.board[2][j] == 'X'):
-                board.done = True
-                board.X = True
-        if(board.board[0][0] == 'O' and board.board[1][1] == 'O' and board.board[2][2] == 'O'):
-            board.done = True
-            board.O = True
-        if(board.board[0][2] == 'O' and board.board[1][1] == 'O' and board.board[2][0] == 'O'):
-            board.done = True
-            board.O = True
-        if(board.board[0][0] == 'X' and board.board[1][1] == 'X' and board.board[2][2] == 'X'):
-            board.done = True
-            board.X = True
-        if(board.board[0][2] == 'X' and board.board[1][1] == 'X' and board.board[2][0] == 'X'):
-            board.done = True
-            board.X = True
-        return board
-
-    def turnCycle(self, board):
-        i = 0
-        j = 0
-        print("Player 1, enter the x-coordinate for the 'X' character: ")
-        i = int(input())
-        print("Player 1, enter the y-coordinate for the 'X' character: ")
-        j = int(input())
-        board.board[j][i] = 'X'
-        self.printBoard(board)
-        board = self.checkConditions(board)
-        if(board.done == False):
-            print("Great!\n\n")
-            print("Player 2, enter the x-coordinate for the 'O' character: ")
-            i = int(input())
-            print("Player 2, enter the y-coordinate for the 'O' character: ")
-            j = int(input())
-            board.board[j][i] = 'O'
-            self.printBoard(board)
-            board = self.checkConditions(board)
-        return board
-
-    def main(self):
-        print("Welcome to TicTacToe! Here's the Board: \n\n")
-        board = self.setupBoard()
-        board.done = False
-        board.O = False
-        board.X = False
-
-        i = 0
-        while(board.done == False and i < 9):
-            board = self.turnCycle(board)
-            i += 1
-        if(board.O == True):
-            print("Player 1 Wins!\n")
-        elif(board.X == True):
-            print("Player 2 Wins!\n")
-        else:
-            print("It's a TIE!")
-        return 0
+            if(self.board.board[0][j] == 'O' and self.board.board[1][j] == 'O' and self.board.board[2][j] == 'O'):
+                self.board.done = True
+                self.board.O = True
+            if(self.board.board[0][j] == 'X' and self.board.board[1][j] == 'X' and self.board.board[2][j] == 'X'):
+                self.board.done = True
+                self.board.X = True
+        if(self.board.board[0][0] == 'O' and self.board.board[1][1] == 'O' and self.board.board[2][2] == 'O'):
+            self.board.done = True
+            self.board.O = True
+        if(self.board.board[0][2] == 'O' and self.board.board[1][1] == 'O' and self.board.board[2][0] == 'O'):
+            self.board.done = True
+            self.board.O = True
+        if(self.board.board[0][0] == 'X' and self.board.board[1][1] == 'X' and self.board.board[2][2] == 'X'):
+            self.board.done = True
+            self.board.X = True
+        if(self.board.board[0][2] == 'X' and self.board.board[1][1] == 'X' and self.board.board[2][0] == 'X'):
+            self.board.done = True
+            self.board.X = True
 
     def run(self):
         self.master.mainloop()
