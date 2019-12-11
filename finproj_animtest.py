@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 """
-Placeholder docstring
+READ THIS FIRST
+
+So I named this thinking I'd use it to test animation, but instead I'm using
+this to test for loops and whatnot to condense Srikar's code.
 """
 
-import tkinter
 from tkinter import *
 import time
 from PIL import ImageTk, Image
 from board_class import Board
 from rectangulator import rectize
 from merge_sort import merge_sort
-from the_tuple_izer import tuple_izer
-from searcher import search_for
 from save_file_reader import reader
-from img_hider import hide_img
 
 
 class GUI(Board):
@@ -29,12 +28,10 @@ class GUI(Board):
         super().__init__()
 
         self.game = 0
-        self.p1_wins = 0
+        self.player_1_wins = 0
         self.draws = 0
-        self.p2_wins = 0
+        self.player_2_wins = 0
         self.tuple = 0
-        self.list_games = []
-        self.list_games = reader(self.list_games)
 
         self.master = Tk()
         self.master.geometry('800x600')
@@ -48,12 +45,6 @@ class GUI(Board):
         )
         self.O_image = ImageTk.PhotoImage(
             Image.open("./tic_tac_toe_o.png")
-        )
-        self.X_big = ImageTk.PhotoImage(
-            Image.open("./x_big.png")
-        )
-        self.O_big = ImageTk.PhotoImage(
-            Image.open("./o_big.png")
         )
 
         self.frame_up = Frame(self.master, width=400, height=100)
@@ -69,45 +60,43 @@ class GUI(Board):
             self.frame_down, text="Destroy GUI.",
             background="red", foreground="white",
             highlightbackground="red", command=self.quit
-            )
+        )
         self.destroy_button.pack()
 
         self.label_up = Label(
             self.frame_up, text="Tic Tac Toe", font=("Courier", 25)
-            )
+        )
         self.label_up.pack()
 
         self.label_down = Label(
             self.frame_down, text="Player 1 Turn!", font=("Courier", 25)
-            )
+        )
         self.label_down.pack()
 
-        self.label_inst = Label(
-            self.frame_sidebar,
-            text="Please search for: (P1 Wins),(P2 Wins),(Draws)"
-        )
-        self.label_inst.pack()
-        self.search_ = tkinter.Entry(self.frame_sidebar)
-        self.search_.pack()
-        self.search_bttn = tkinter.Button(
-            self.frame_sidebar, text=" Find the Game! ",
-            command=(
-                lambda : search_for(
-                    self.search_, self.list_games, self.label_sidebar
-                )
-            )
-        )
-        self.search_bttn.pack()
-        self.label_sidebar = Label(self.frame_sidebar, text="")
+        self.label_sidebar = Label(self.frame_sidebar)
         self.label_sidebar.pack()
-
 
         self.canvas_main = Canvas(
             self.frame_board, width=400, height=400, bg='white'
-            )
+        )
         self.canvas_main.pack(expand=YES, fill=BOTH)
         
         self.canvas_main.create_image(3, 3, image=self.board_image, anchor=NW)
+
+        # self.rects[0] = 0
+        # self.rects[1] = 0
+        # self.rects[2] = 0
+        # self.rects[3] = 0
+        # self.rects[4] = 0
+        # self.rects[5] = 0
+        # self.rects[6] = 0
+        # self.rects[7] = 0
+        # self.rects[8] = 0
+        # self.rects = [
+        #     self.rects[0], self.rects[1], self.rects[2],
+        #     self.rects[3], self.rects[4], self.rects[5],
+        #     self.rects[6], self.rects[7], self.rects[8]
+        # ]
 
         self.r_coords = [
             (3, 3, 125, 130), (155, 3, 250, 130), (280, 3, 400, 130),
@@ -119,42 +108,70 @@ class GUI(Board):
 
         rectize(self.canvas_main, self.rects, self.r_coords, "square")
 
+        # self.rects[0] = self.canvas_main.create_rectangle(
+        #     3, 3, 125, 130, fill='white', outline='white', tags="square1"
+        # )
+        # self.rects[1] = self.canvas_main.create_rectangle(
+        #     155, 3, 250, 130, fill='white', outline='white', tags="square2"
+        # )
+        # self.rects[2] = self.canvas_main.create_rectangle(
+        #     280, 3, 400, 130, fill='white', outline='white', tags="square3"
+        # )
+        # self.rects[3] = self.canvas_main.create_rectangle(
+        #     3, 160, 125, 255, fill='white', outline='white', tags="square4"
+        # )
+        # self.rects[4] = self.canvas_main.create_rectangle(
+        #     155, 160, 250, 255, fill='white', outline='white', tags="square5"
+        # )
+        # self.rects[5] = self.canvas_main.create_rectangle(
+        #     280, 160, 400, 255, fill='white', outline='white', tags="square6"
+        # )
+        # self.rects[6] = self.canvas_main.create_rectangle(
+        #     3, 285, 125, 399, fill='white', outline='white', tags="square7"
+        # )
+        # self.rects[7] = self.canvas_main.create_rectangle(
+        #     155, 285, 250, 399, fill='white', outline='white', tags="square8"
+        # )
+        # self.rects[8] = self.canvas_main.create_rectangle(
+        #     280, 285, 400, 399, fill='white', outline='white', tags="square9"
+        # )
+
         self.canvas_main.tag_bind(
             self.rects[0], "<Button-1>",
             (lambda event, square="square1": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[1], "<Button-1>",
             (lambda event, square="square2": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[2], "<Button-1>",
             (lambda event, square="square3": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[3], "<Button-1>",
             (lambda event, square="square4": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[4], "<Button-1>",
             (lambda event, square="square5": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[5], "<Button-1>",
             (lambda event, square="square6": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[6], "<Button-1>",
             (lambda event, square="square7": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[7], "<Button-1>",
             (lambda event, square="square8": self.box_filler(event, square))
-            )
+        )
         self.canvas_main.tag_bind(
             self.rects[8], "<Button-1>",
             (lambda event, square="square9": self.box_filler(event, square))
-            )
+        )
 
         self.dict_square = {
         "square1": (20, 20, 0, 0),
@@ -167,6 +184,8 @@ class GUI(Board):
         "square8": (154, 290, 2, 1),
         "square9": (290, 290, 2, 2)
         }
+
+
 
         self.symbol = "X"
 
@@ -181,9 +200,9 @@ class GUI(Board):
             self.canvas_main.create_image(
                 self.dict_square[square][0], self.dict_square[square][1],
                 image=self.X_image, anchor=NW
-                )
+            )
             self.board[self.dict_square[square][2]][self.dict_square[square][3]] = self.symbol
-            self.check_conditions()
+            self.checkConditions()
             self.symbol = "O"
             self.label_down.configure(text="Player 2 Turn!")
             self.label_down.update()
@@ -191,36 +210,27 @@ class GUI(Board):
             self.canvas_main.create_image(
                 self.dict_square[square][0], self.dict_square[square][1],
                 image=self.O_image, anchor=NW
-                )
+            )
             self.board[self.dict_square[square][2]][self.dict_square[square][3]] = self.symbol
-            self.check_conditions()
+            self.checkConditions()
             self.symbol = "X"
             self.label_down.configure(text="Player 1 Turn!")
             self.label_down.update()
         self.turn += 1
 
-        self.print_board()
+        self.printBoard()
         print(self.board)
 
         if(self.done != False or self.turn >= 9):
             print(self.X, self.O)
             if(self.X == True):
                 print("Player 1 Wins!\n")
-                self.label_down.configure(text="Player 1 Wins!")
-                self.label_down.update()
-                time.sleep(0.2)
-                self.p1_wins += 1
+                self.player_1_wins += 1
             elif(self.O == True):
                 print("Player 2 Wins!\n")
-                self.label_down.configure(text="Player 1 Wins!")
-                self.label_down.update()
-                time.sleep(0.2)
-                self.p2_wins += 1
+                self.player_2_wins += 1
             else:
                 print("It's a TIE!")
-                self.label_down.configure(text="It's a TIE!")
-                self.label_down.update()
-                time.sleep(0.2)
                 self.draws += 1
             
             self.board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -230,114 +240,124 @@ class GUI(Board):
             self.symbol = "X"
             self.turn = 0
             self.game += 1
-            time.sleep(0.2)
-            self.label_down.configure(text="Player 1 Turn!")
-            self.label_down.update()
+            # for i in range (1,10):
+
             self.canvas_main.delete("all")
 
-            if self.game != 5:
+            self.canvas_main.create_image(
+                3, 3, image=self.board_image, anchor=NW
+            )
 
-                self.canvas_main.create_image(3, 3, image=self.board_image, anchor=NW)
+            self.rects[0] = self.canvas_main.create_rectangle(
+                3, 3, 125, 130,
+                fill='white', outline='white', tags="square1"
+            )
+            self.rects[1] = self.canvas_main.create_rectangle(
+                155, 3, 250, 130,
+                fill='white', outline='white', tags="square2"
+            )
+            self.rects[2] = self.canvas_main.create_rectangle(
+                280, 3, 400, 130,
+                fill='white', outline='white', tags="square3"
+            )
+            self.rects[3] = self.canvas_main.create_rectangle(
+                3, 160, 125, 255,
+                fill='white', outline='white', tags="square4"
+            )
+            self.rects[4] = self.canvas_main.create_rectangle(
+                155, 160, 250, 255,
+                fill='white', outline='white', tags="square5"
+            )
+            self.rects[5] = self.canvas_main.create_rectangle(
+                280, 160, 400, 255,
+                fill='white', outline='white', tags="square6"
+            )
+            self.rects[6] = self.canvas_main.create_rectangle(
+                3, 285, 125, 399,
+                fill='white', outline='white', tags="square7"
+            )
+            self.rects[7] = self.canvas_main.create_rectangle(
+                155, 285, 250, 399,
+                fill='white', outline='white', tags="square8"
+            )
+            self.rects[8] = self.canvas_main.create_rectangle(
+                280, 285, 400, 399,
+                fill='white', outline='white', tags="square9"
+            )
 
-                self.r_coords = [
-                    (3, 3, 125, 130), (155, 3, 250, 130), (280, 3, 400, 130),
-                    (3, 160, 125, 255), (155, 160, 250, 255), (280, 160, 400, 255),
-                    (3, 285, 125, 399), (155, 285, 250, 399), (280, 285, 400, 399)
-                ]
-
-                self.rects = []
-
-                rectize(self.canvas_main, self.rects, self.r_coords, "square")
-
-                self.canvas_main.tag_bind(
-                    self.rects[0], "<Button-1>", (
-                        lambda event,
-                        square="square1": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[1], "<Button-1>", (
-                        lambda event,
-                        square="square2": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[2], "<Button-1>", (
-                        lambda event,
-                        square="square3": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[3], "<Button-1>", (
-                        lambda event,
-                        square="square4": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[4], "<Button-1>", (
-                        lambda event,
-                        square="square5": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[5], "<Button-1>", (
-                        lambda event,
-                        square="square6": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[6], "<Button-1>", (
-                        lambda event,
-                        square="square7": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[7], "<Button-1>", (
-                        lambda event,
-                        square="square8": self.box_filler(event, square)
-                        )
-                    )
-                self.canvas_main.tag_bind(
-                    self.rects[8], "<Button-1>", (
-                        lambda event,
-                        square="square9": self.box_filler(event, square)
-                        )
-                    )
+            self.canvas_main.tag_bind(
+                self.rects[0], "<Button-1>", (
+                    lambda event,
+                    square="square1": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[1], "<Button-1>", (
+                    lambda event,
+                    square="square2": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[2], "<Button-1>", (
+                    lambda event,
+                    square="square3": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[3], "<Button-1>", (
+                    lambda event,
+                    square="square4": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[4], "<Button-1>", (
+                    lambda event,
+                    square="square5": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[5], "<Button-1>", (
+                    lambda event,
+                    square="square6": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[6], "<Button-1>", (
+                    lambda event,
+                    square="square7": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[7], "<Button-1>", (
+                    lambda event,
+                    square="square8": self.box_filler(event, square)
+                )
+            )
+            self.canvas_main.tag_bind(
+                self.rects[8], "<Button-1>", (
+                    lambda event,
+                    square="square9": self.box_filler(event, square)
+                )
+            )
     
         if self.game == 5:
-            self.tuple = (self.p1_wins, self.p2_wins, self.draws)
-            self.list_games.append(self.tuple)
-            print(self.list_games)
-            merge_sort(self.list_games)
-            self.list_games = self.list_games[::-1]
-            print(self.list_games)
+            self.tuple = (self. player_1_wins, self.draws, self.player_2_wins)
+            list_games = []
+            list_games = reader(list_games)
+            list_games.append(self.tuple)
+            print(list_games)
+            merge_sort(list_games)
+            list_games = list_games[::-1]
+            print(list_games)
             with open("save_log.txt", "w+") as out_file:
-                for item in self.list_games:
+                for item in list_games:
                     out_file.write(str(item))
                     out_file.write("\n")
-            time.sleep(0.5)
-            self.canvas_main.delete("all")
-            self.win_screen = None
-            if self.p1_wins > self.p2_wins:
-                self.label_down.configure(
-                    text=f"P1 Wins {self.p1_wins} to {self.p2_wins}!"
-                )
-                self.label_down.update()
-                hide_img(self.win_screen, self.canvas_main, self.X_big)
-                self.canvas_main.delete("all")
-            elif self.p1_wins < self.p2_wins:
-                self.label_down.configure(
-                    text=f"P2 Wins {self.p2_wins} to {self.p1_wins}!"
-                )
-                self.label_down.update()
-                hide_img(self.win_screen, self.canvas_main, self.O_big)
-                self.canvas_main.delete("all")
-            elif self.p1_wins == self.p2_wins:
-                self.label_down.configure(text=f"It's a Tie!")
-                self.label_down.update()
+            time.sleep(5)
+            self.quit()
 
 
-    def print_board(self):
+    def printBoard(self):
         """
         Placeholder.
         """
@@ -348,7 +368,7 @@ class GUI(Board):
         print("")
 
 
-    def check_conditions(self):
+    def checkConditions(self):
         """
         Placeholder.
         """

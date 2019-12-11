@@ -1,22 +1,20 @@
+#!/usr/bin/env python3
+
 from tkinter import *
 
 class ScrolledWindow(Frame):
     """
     1. Master widget gets scrollbars and a canvas. Scrollbars are connected 
     to canvas scrollregion.
-
     2. self.scrollwindow is created and inserted into canvas
-
     Usage Guideline:
     Assign any widgets as children of <ScrolledWindow instance>.scrollwindow
     to get them inserted into canvas
-
     __init__(self, parent, canv_w = 400, canv_h = 400, *args, **kwargs)
     docstring:
     Parent = master of scrolled window
     canv_w - width of canvas
     canv_h - height of canvas
-
     """
 
 
@@ -24,7 +22,6 @@ class ScrolledWindow(Frame):
         """Parent = master of scrolled window
         canv_w - width of canvas
         canv_h - height of canvas
-
        """
         super().__init__(parent, *args, **kwargs)
 
